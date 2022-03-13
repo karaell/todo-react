@@ -21,6 +21,7 @@ function PriorityBlock(props) {
         <div className="todo__priority-block" id={priority}>
             <PriorityTitle priority={priority} />
             <AddPanel />
+            <TasksBlock />
         </div>
     )
 }
@@ -35,7 +36,7 @@ function AddPanel() {
 
     useEffect(()=> {
         console.log(text);
-        <TaskRow text={text} />;
+        <TasksBlock text={text} />;
     })
 
     return (
@@ -43,6 +44,15 @@ function AddPanel() {
             <input className="input-add" type="text" placeholder="Добавить важных дел"/>
             <button className="btn-add"> <img src={add} alt="Иконка добавить задачу"/> </button>
         </form>
+    )
+}
+
+function TasksBlock (props) {
+    const text = props.text;
+    console.log(text)
+
+    return (
+        <TaskRow text = {text} />
     )
 }
 
