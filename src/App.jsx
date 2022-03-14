@@ -5,58 +5,95 @@ import { PriorityTitle } from './Title';
 import add from "./image/add.svg";
 import del from "./image/delete.svg"
 
+const PRIORITY = {
+    HIGH: "high",
+    LOW: "low",
+}
+
+const TASKS_HIGH = [];
+const TASKS_LOW = [];
+
 function App() {
     return (
         <div className="todo__wrapper">
-            <PriorityBlock priority="high"/>
-            <PriorityBlock priority="low"/>
+            <PriorityBlock priority={PRIORITY.HIGH} />
+            <PriorityBlock priority={PRIORITY.LOW} />
         </div>
     )
 }
 
 function PriorityBlock(props) {
+    const [taskListHigh, setTaskListHigh] = useState(TASKS_HIGH);
+    const [taskListLow, setTaskListLow] = useState(TASKS_LOW);
+
     const priority = props.priority;
 
+    function handleTaskListHigh(newTaskText) {
+        setTaskListHigh([...taskListHigh, newTaskText]);
+    }    
+
+    function handleTaskListLow(newTaskText) {
+        setTaskListLow([...taskListLow, newTaskText]);
+    }
+
+    let array;
+
+    if (priority === "high") { array = taskListHigh }
+    else { array = taskListLow }
+
     return (
-        <div className="todo__priority-block" id={priority}>
+        <div className="todo__priority-block">
             <PriorityTitle priority={priority} />
-            <AddPanel />
-            <TasksBlock />
+            <AddPanel 
+                priority={priority} 
+                onTaskListHigh={handleTaskListHigh}
+                onTaskListLow={handleTaskListLow}
+            />
+            <TasksList array={array}/>
         </div>
     )
 }
 
-function AddPanel() {
-    const [text, setText] = useState('');
+function AddPanel(props) {
+    const priority = props.priority;
     
     function handleSubmit(event) {
         event.preventDefault();
-        setText(event.target[0].value);
-    }
 
-    useEffect(()=> {
-        console.log(text);
-        <TasksBlock text={text} />;
-    })
+        const newTaskText = event.target[0].value;
+
+        if (priority === "high") {
+            return props.onTaskListHigh(newTaskText);
+        }
+        return props.onTaskListLow(newTaskText);
+        
+    }
 
     return (
         <form className="todo__add-block" onSubmit={handleSubmit}>
-            <input className="input-add" type="text" placeholder="Добавить важных дел"/>
+            <input 
+                // value={}
+                className="input-add" type="text" placeholder="Добавить важных дел" />
             <button className="btn-add"> <img src={add} alt="Иконка добавить задачу"/> </button>
         </form>
     )
 }
 
-function TasksBlock (props) {
-    const text = props.text;
-    console.log(text)
+function TasksList (props) {
+    const array = props.array;
+    console.log(array);
 
     return (
-        <TaskRow text = {text} />
+        <div className="tasksList">
+            {array.map (taskText => {
+                <TaskRow taskText = {taskText} />;
+            })}
+        </div>
     )
-}
+} 
 
 function TaskRow(props) {
+    console.log(props.text)
     const taskText = props.text;
 
     return (
