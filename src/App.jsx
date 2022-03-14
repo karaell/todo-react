@@ -94,7 +94,7 @@ function TasksList (props) {
 
 function TaskRow(props) {
     console.log(props.text)
-    const taskText = props.text;
+    const taskText = props.taskText;
 
     return (
         <div className="todo__task">
